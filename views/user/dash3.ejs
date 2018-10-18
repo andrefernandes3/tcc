@@ -1,0 +1,67 @@
+<% layout('layout2') %>
+
+<div id="wrapper">
+
+    <div id="page-content-wrapper">    
+       
+       
+        <div class="container-fluid main_body">         
+           
+           <p>Gráficos de categorias mais buscadas</p>
+           
+           <div class="container">			
+           <a href="/home"><i class="fa fa-home"></i>Home</a>
+           </div>        
+        </div>
+    </div>
+</div>	
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Categorias mais buscadas</title>
+    <link rel="stylesheet" href="/css/highcharts.css">
+</head>
+<body>
+    <div id="chart"></div>    
+    <script src="/js/highcharts.js"></script>
+    <script src="/js/exporting.js"></script>
+
+    <script>
+
+            const options = {
+    chart: {
+        type: 'pie',
+        renderTo: document.getElementById('chart')
+    },
+    title: {
+        text: "Categorias mais buscadas"
+    },
+    plotOptions: {
+        pie: {
+            allowPointSelect: true,
+            showInLegend: true
+        }
+    },
+    series: [{
+       // name: "Idades",
+        data: [
+            { name: "Ração Seca", y: 33, sliced: true, selected: true },
+            { name: "Ração Úmida", y: 27 },
+            { name: "Ração Medicamentosa", y: 22 },
+            { name: "Maria", y: 23 },
+            { name: "Matheus", y: 37 },
+        ]
+    }]
+    
+};
+
+new Highcharts.Chart(options);
+        
+    </script>
+</body>

@@ -1,0 +1,154 @@
+<% layout('layout') %>   
+<!-- Adicionando JQuery -->
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"
+integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+crossorigin="anonymous">
+</script>
+
+<!-- Adicionando Javascript -->
+<script type="text/javascript" >
+
+$(document).ready(function() {
+
+function limpa_formulário_cep() {
+    // Limpa valores do formulário de cep.
+    $("#rua").val("");
+    $("#bairro").val("");
+    $("#cidade").val("");
+    $("#uf").val("");
+    $("#ibge").val("");
+}
+
+//Quando o campo cep perde o foco.
+$("#cep").blur(function() {
+
+    //Nova variável "cep" somente com dígitos.
+    var cep = $(this).val().replace(/\D/g, '');
+
+    //Verifica se campo cep possui valor informado.
+    if (cep != "") {
+
+        //Expressão regular para validar o CEP.
+        var validacep = /^[0-9]{8}$/;
+
+        //Valida o formato do CEP.
+        if(validacep.test(cep)) {
+
+            //Preenche os campos com "..." enquanto consulta webservice.
+            $("#rua").val("...");
+            $("#bairro").val("...");
+            $("#cidade").val("...");
+            $("#uf").val("...");
+            $("#ibge").val("...");
+
+            //Consulta o webservice viacep.com.br/
+            $.getJSON("https://viacep.com.br/ws/"+ cep +"/json/?callback=?", function(dados) {
+
+                if (!("erro" in dados)) {
+                    //Atualiza os campos com os valores da consulta.
+                    $("#rua").val(dados.logradouro);
+                    $("#bairro").val(dados.bairro);
+                    $("#cidade").val(dados.localidade);
+                    $("#uf").val(dados.uf);
+                    $("#ibge").val(dados.ibge);
+                } //end if.
+                else {
+                    //CEP pesquisado não foi encontrado.
+                    limpa_formulário_cep();
+                    alert("CEP não encontrado.");
+                }
+            });
+        } //end if.
+        else {
+            //cep é inválido.
+            limpa_formulário_cep();
+            alert("Formato de CEP inválido.");
+        }
+    } //end if.
+    else {
+        //cep sem valor, limpa formulário.
+        limpa_formulário_cep();
+    }
+});
+});
+
+</script>
+<div class="container">
+    <br><br>
+   
+
+   <div class="text-center reg_msg">
+        <h2 class="fancy"><span>Cadastro</span></h2>
+   </div><br>
+
+    <div class="row signup">
+        
+        <% if(hasErrors) {%>
+            <% for(var i = 0; i <messages.length; i++) {%>
+                <div class="alert alert-danger">
+                   <a href="#" class="close" data-dismiss="alert" aria-label="close">
+                       &times;
+                   </a>
+                   
+                   <%= messages[i] %>
+                    
+                </div>
+            <% } %>
+        <% } %>
+
+        <form method="POST" class="" id="signupForm" action="/signup">
+
+            <div class="form-group input_group">
+               <input id="razao" class="form-control" name="razao" type="text" autocomplete="on" placeholder="Razão Social" style="margin-bottom:20px;" >
+            </div>
+
+            <div class="form-group input_group">
+                <input id="nome" class="form-control" name="nome" type="text" autocomplete="on" placeholder="Nome Fantasia" style="margin-bottom:20px;" >
+            </div>
+
+            <div class="form-group input_group">
+                <input id="cnpj" class="form-control" name="cnpj" type="number" autocomplete="on" placeholder="CNPJ" style="margin-bottom:20px;" >
+            </div>
+
+            <div class="form-group input_group">
+                <input id="tel" class="form-control" name="tel" type="text" autocomplete="on" pattern="[0-9]+$" placeholder="Telefone" style="margin-bottom:20px;" >
+            </div>
+            
+            <div class="form-group input_group">
+                <input id="cep" class="form-control" name="cep" type="text" size="8" maxlength="8" autocomplete="on" placeholder="CEP" style="margin-bottom:20px;" >
+            </div>
+
+            <div class="form-group input_group">
+                <input id="rua" class="form-control" name="rua" type="text" autocomplete="on" placeholder="Rua" style="margin-bottom:20px;" >
+            </div>
+
+            <div class="form-group input_group">
+                <input id="bairro" class="form-control" name="bairro" type="text" autocomplete="on" placeholder="Bairro" style="margin-bottom:20px;" >
+            </div>
+
+            <div class="form-group input_group">
+                <input id="cidade" class="form-control" name="cidade" type="text" autocomplete="on" placeholder="Cidade" style="margin-bottom:20px;" >
+            </div>
+
+            <div class="form-group input_group">
+                <input id="uf" class="form-control" name="uf" type="text" autocomplete="on" placeholder="Estado" style="margin-bottom:20px;" >
+            </div>          
+
+            <div class="form-group input_group">
+                <input id="email" class="form-control" name="email" type="text" autocomplete="on" placeholder="E-mail" style="margin-bottom:20px;">
+            </div>            
+
+            <div class="form-group input_group">
+                <input id="password" class="form-control" name="password" type="password" placeholder="Senha" style="margin-bottom:20px;">
+            </div>
+
+            <div class="form-group">
+                <input type="submit" id="submit" value="CADASTRAR-SE" class="form-control btn btn-primary" name="submit" >
+            </div>
+          </form>
+
+          <div>
+              <h4>Já tem uma conta? <a href="/login">Entrar</a></h4>
+          </div>
+    </div>
+</div>
